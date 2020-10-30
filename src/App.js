@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+import React from 'react';
+import {ProgressBar} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const utils = {};
+
+const useAppState = () => {
+
+  const [percentage, setPercentage] = React.useState(0);
+  const [time, setTime] = React.useState(50);
+
+
+  React.useEffect(() => {
+        const timerId = setTimeout(() => {
+          if(percentage < 100){
+            setPercentage(percentage + 1);
+          } else {
+            setPercentage(0);
+            setTime(time - 5)
+          }
+
+        }, time);
+        return () => clearTimeout(timerId);
+      }
   );
-}
+
+  return {percentage, setPercentage};
+};
+
+const ClickerElement = (props) => {
+
+  return (
+      <div style={{width: '50%'}}>
+        <ProgressBar  now={props.percentage}/>
+      </div>
+  )
+};
+
+
+const App = () => {
+
+  const {percentage, setPercentage} = useAppState();
+
+  return (<div>
+
+    <ClickerElement percentage={percentage}/>
+  </div>);
+
+};
 
 export default App;
